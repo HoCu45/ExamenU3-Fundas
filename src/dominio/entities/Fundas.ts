@@ -19,7 +19,7 @@ get tipo(): string { return this._tipo; }
 
 static crear(modelo: string, tipo: string): Fundas {
     // Validaciones estrictas en el nacimiento
-    if (!tipo || !tipo.includes("@")) {
+    if (!tipo) {
         throw new Error("El formato del tipo es invalido para el nuevo Fundas");
     }
     if (!modelo || modelo.trim().length < 2) {
@@ -38,7 +38,7 @@ static reconstruir(id: number, modelo: string, tipo: string): Fundas {
 
 //4. comportamiento: el único punto para modificar el estado
 actualizar(modelo: string, tipo: string): void {
-    if(!tipo || !tipo.includes("@")) {
+    if(!tipo) {
         throw new Error("tipo invalido para actualización");
     }
     this._modelo = modelo.trim();

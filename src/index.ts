@@ -23,7 +23,7 @@ DEPENDENCY INJECTION
 
 */
 
-const TelefonosRepository =
+const fundasRepository =
 new FundasRepositoryImpl (db);
 
 /*
@@ -32,42 +32,42 @@ USE CASE INSTANCES
 
 */
 
-const crearTelefonosUseCase =
+const crearfundasUseCase =
 
 new CrearFundassUseCase (
 
-TelefonosRepository
+fundasRepository
 );
 
-const obtenerTelefonosUseCase =
+const obtenerfundasUseCase =
 
 new ObtenerFundassUseCase (
 
-TelefonosRepository
+fundasRepository
 
 );
 
-const listarTelefonossUseCase =
+const listarfundassUseCase =
 
 new ListarFundassUseCase (
 
-TelefonosRepository
+fundasRepository
 
 );
 
-const actualizarTelefonosUseCase =
+const actualizarfundasUseCase =
 
 new ActualizarFundasUseCase (
 
-TelefonosRepository
+fundasRepository
 
 );
 
-const eliminarTelefonosUseCase =
+const eliminarfundasUseCase =
 
 new EliminarFundasUseCase (
 
-TelefonosRepository
+fundasRepository
 
 );
 
@@ -79,27 +79,27 @@ SERVICE INSTANCE
 
 
 
-const TelefonossService =
+const fundassService =
 
 new FundasService (
 
-crearTelefonosUseCase,
+crearfundasUseCase,
 
-obtenerTelefonosUseCase,
+obtenerfundasUseCase,
 
-listarTelefonossUseCase,
+listarfundassUseCase,
 
-actualizarTelefonosUseCase,
+actualizarfundasUseCase,
 
-eliminarTelefonosUseCase
+eliminarfundasUseCase
 
 );
 
-const TelefonossController =
+const fundassController =
 
 new FundasController(
 
-    TelefonossService
+    fundassService
 
 );
 
@@ -156,41 +156,41 @@ const server = Bun.serve({
 
             /*
 
-            Telefonoss
+            fundass
 
             */
 
-            if (pathname === "/Telefonoss") {
+            if (pathname === "/fundas") {
 
                 /*
 
-                get /Telefonoss
+                get /fundass
 
                 */
 
                 if (method === "GET") {
-                    const Telefonoss = 
-                        await TelefonossController.listarFundass();
+                    const fundass = 
+                        await fundassController.listarFundass();
 
-                    return json(Telefonoss);
+                    return json(fundass);
                 }
 
                 /*
 
-                POST /Telefonoss
+                POST /fundass
 
                 */
 
                 if (method === "POST") {
 
                     const body = await req.json() as {
-                           nombre?: string;
-                           email?: string;
+                           modelo?: string;
+                           tipo?: string;
                         };
 
-                    const nombre = body.nombre?.trim();
+                    const modelo = body.modelo?.trim();
 
-                    const email = body.email?.trim();
+                    const tipo = body.tipo?.trim();
 
                     /*
 
@@ -198,10 +198,10 @@ const server = Bun.serve({
 
                     */
 
-                    if (!nombre || !email) {
+                    if (!modelo || !tipo) {
                         return json(
                             {
-                                error: "nombre y email son obligatorios",
+                                error: "modelo y tipo son obligatorios",
                             },
                             400
 
@@ -210,15 +210,15 @@ const server = Bun.serve({
 
                     /*
 
-                    CREAR Telefonos
+                    CREAR fundas
 
                     */
 
-                    const dtoUser = new CreateFundasRequest(nombre, email);
-                    const Telefonos= 
-                        await TelefonossController.crearFundas(dtoUser);
+                    const dtoUser = new CreateFundasRequest(modelo, tipo);
+                    const fundas= 
+                        await fundassController.crearFundas(dtoUser);
 
-                    return json (Telefonos, 201);
+                    return json (fundas, 201);
                 }
 
                 /*
@@ -237,11 +237,11 @@ const server = Bun.serve({
 
             /*
 
-            /Telefonoss/id
+            /fundass/id
 
             */
 
-            if (pathname.startsWith("/Telefonoss/")) {
+            if (pathname.startsWith("/fundas/")) {
 
                 /*
 
@@ -268,30 +268,30 @@ const server = Bun.serve({
                 }
                 /*
 
-                GET /Telefonoss/id
+                GET /fundass/id
 
                 */
 
                 if(method==="GET") {
                     
-                    const Telefonos = await TelefonossController.obtenerFundas(id);
+                    const fundas = await fundassController.obtenerFundas(id);
 
-                    if (!Telefonos) {
+                    if (!fundas) {
 
                         return json(
                         {
-                            error: "Telefonos no encontrado",
+                            error: "fundas no encontrado",
                         },
                         400
                     );
                     }
 
-                    return json(Telefonos);
+                    return json(fundas);
                 }
 
                 /*
 
-                PUT /Telefonoss/id
+                PUT /fundass/id
 
                 */
 
@@ -299,13 +299,13 @@ const server = Bun.serve({
 
                 const body = await req.json() as {
 
-                    nombre?: string;
-                    email?: string;
+                    modelo?: string;
+                    tipo?: string;
                     };
 
-                const nombre = body.nombre?.trim();
+                const modelo = body.modelo?.trim();
 
-                const email = body.email?.trim();
+                const tipo = body.tipo?.trim();
 
                 /*
 
@@ -313,11 +313,11 @@ const server = Bun.serve({
 
                 */
 
-                if (!nombre || !email) {
+                if (!modelo || !tipo) {
 
                     return json (
                         {
-                            error: "nombre y email son obligatorios",
+                            error: "modelo y tipo son obligatorios",
                         },
                         400
                     );
@@ -325,11 +325,11 @@ const server = Bun.serve({
 
                 try {
 
-                    const dtoActualizarTelefonos = new ActualizarFundasRequest(id, nombre, email);
+                    const dtoActualizarfundas = new ActualizarFundasRequest(id, modelo, tipo);
 
-                    const Telefonos = await TelefonossController.actualizarFundas(dtoActualizarTelefonos);
+                    const fundas = await fundassController.actualizarFundas(dtoActualizarfundas);
                 
-                    return json(Telefonos);
+                    return json(fundas);
                 } catch (error: any) {
 
                     return json (
@@ -343,29 +343,29 @@ const server = Bun.serve({
 
             /*
 
-            DELETE /Telefonoss/:ID
+            DELETE /fundass/:ID
 
             */
 
             if (method === "DELETE") {
 
                 try {
-                    const Telefonos = await TelefonossController.obtenerFundas(id );
+                    const fundas = await fundassController.obtenerFundas(id );
 
-                if (!Telefonos) {
+                if (!fundas) {
                     return json(
                         {
-                            error: "Telefonos no encontrado",
+                            error: "fundas no encontrado",
                         },
                         404
                     );
                 }
 
-                await TelefonossController.eliminarFundas(id);
+                await fundassController.eliminarFundas(id);
 
                 return json ({
-                    message: "Telefonos eliminado",
-                    Telefonos,
+                    message: "fundas eliminado",
+                    fundas,
                 });
 
                 } catch (error: any) {
