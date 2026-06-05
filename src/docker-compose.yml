@@ -11,7 +11,7 @@ services:
       POSTGRES_DB: escuela
 
     ports:
-      - "5432:5432"
+      - "5433:5433"
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -24,14 +24,14 @@ services:
     restart: unless-stopped
 
     ports:
-      - "3000:3000"
+      - "3001:3001"
 
     environment:
       DB_HOST: postgres
       DB_USER: admin
       DB_PASSWORD: admin123
       DB_NAME: escuela
-      DB_PORT: 5432
+      DB_PORT: 5433
 
     depends_on:
       - postgres
