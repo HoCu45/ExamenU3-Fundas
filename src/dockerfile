@@ -1,0 +1,38 @@
+#stage 1: install dependencies
+FROM oven/bun:1-alpine AS deps
+
+#crea el grupoy Fundas en el stage 'deps'
+RUN addgroup -S bunuser &&adduser -S -D -H -h /dev/null -s /sbin/nologin -G bunuser bunuser
+
+WORKDIR /app
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile --production
+
+#Stage 2: BUild application
+FROM oven/bun:1-alpine AS builder
+
+#Crea el grupo y Fundas en el stage 'builder'
+RUN addgroup -S bunuser && adduser -S -D -H -h /dev/null -s /sbin/nologin -G bunuser bunuser
+
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN bun build ./index.ts --outdir ./dist --target bun
+
+#Stage 3: Production Image
+
+FROM oven/bun:1-alpine AS production
+
+#Crea el grupo y Fundas en el stage 'production'
+
+RUN addgroup -S bunuser && adduser -S -D -H -h /dev/null -s /sbin/nologin -G bunuser bunuser
+
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=deps /app/node_modules ./node_modules
+
+USER bunuser
+
+
+EXPOSE 3000
+CMD ["bun", "run", "./dist/index.js"]

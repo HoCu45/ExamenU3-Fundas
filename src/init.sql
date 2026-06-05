@@ -1,0 +1,5 @@
+CREATE TABLE Fundas (
+    id SERIAL PRIMARY KEY,
+    modelo VARCHAR(100) NOT NULL,
+    tipo VARCHAR(150) NOT NULL
+);
